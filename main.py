@@ -1,3 +1,4 @@
+import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from fpdf import FPDF
@@ -19,12 +20,18 @@ async def gerar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     gerar_pdf("Exemplo de conteúdo gerado pelo bot!")
     await update.message.reply_document(document=open("arquivo.pdf", "rb"))
 
-# Inicializa o bot
+# Inicializa o bot com webhook
 if __name__ == '__main__':
-    app = ApplicationBuilder().token("7396990967:AAFPb7QlPkGBZPJ88khZgbOoQX91ugV35Y0").build()
+    TOKEN = os.getenv("TELEGRAM_TOKEN")  # Use variável de ambiente
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Defina isso no Railway com a URL do seu app
+
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("pdf", gerar))
 
-    print("Bot iniciado.")
-    app.run_polling()
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get("PORT", 8000)),
+        webhook_url=f"{WEBHOOK_URL}/{TOKEN}"
+    )
