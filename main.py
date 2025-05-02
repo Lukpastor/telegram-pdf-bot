@@ -1,27 +1,30 @@
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from fpdf import FPDF
-import os
 
-def gerar_pdf(texto, filename="saida.pdf"):
+# Função que gera um PDF simples
+def gerar_pdf(texto, nome_arquivo="arquivo.pdf"):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-    for linha in texto.split('\n'):
-        pdf.multi_cell(0, 10, txt=linha)
-    pdf.output(filename)
+    pdf.multi_cell(0, 10, texto)
+    pdf.output(nome_arquivo)
 
+# Comando /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Olá! Envie um texto e eu vou gerar um PDF.")
+    await update.message.reply_text("Olá! Envie /pdf para gerar um PDF.")
 
-async def texto_para_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    texto = update.message.text
-    gerar_pdf(texto)
-    await update.message.reply_document(document=open("saida.pdf", "rb"))
+# Comando /pdf
+async def gerar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    gerar_pdf("Exemplo de conteúdo gerado pelo bot!")
+    await update.message.reply_document(document=open("arquivo.pdf", "rb"))
 
-if name == 'main':
-    TOKEN = os.environ["BOT_TOKEN"]
-    app = ApplicationBuilder().token(TOKEN).build()
+# Inicializa o bot
+if __name__ == '__main__':
+    app = ApplicationBuilder().token("7396990967:AAFPb7QlPkGBZPJ88khZgbOoQX91ugV35Y0").build()
+
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, texto_para_pdf))
+    app.add_handler(CommandHandler("pdf", gerar))
+
+    print("Bot iniciado.")
     app.run_polling()
