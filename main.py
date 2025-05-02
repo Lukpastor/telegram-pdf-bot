@@ -22,8 +22,8 @@ async def gerar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Inicializa o bot com webhook
 if __name__ == '__main__':
-    TOKEN = os.getenv("TELEGRAM_TOKEN")  # Use variável de ambiente
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Defina isso no Railway com a URL do seu app
+    TOKEN = os.getenv("7396990967:AAFPb7QlPkGBZPJ88khZgbOoQX91ugV35Y0")  # Use variável de ambiente
+    WEBHOOK_URL = os.getenv("https://telegram-pdf-bot.up.railway.app")  # Defina isso no Railway com a URL do seu app
 
     app = ApplicationBuilder().token(TOKEN).build()
 
